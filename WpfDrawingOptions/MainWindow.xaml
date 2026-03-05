@@ -5,6 +5,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:WpfDrawingOptions"
+    xmlns:shared="clr-namespace:DrawingOptions.Shared;assembly=DrawingOptions.Shared"
 	xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
 	xmlns:skglwpf="clr-namespace:SKGLWpfControl;assembly=SKGLWpfControl"
 	xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
@@ -46,10 +47,10 @@
 		<skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding IsSelected, ElementName=UseSkElement, Converter={StaticResource BoolToVis}}" />
 		<skglwpf:SKGLWpfControl x:Name="SkGlElement" Grid.Row="1" PaintSurface="SkGlElement_PaintSurface" RenderContinuously="False" Visibility="{Binding IsSelected, ElementName=UseSkGl, Converter={StaticResource BoolToVis}}" />
 		<local:SkiaImage Grid.Row="1" x:Name="SkiaImageElement" Visibility="{Binding IsSelected, ElementName=UseSkiaImage, Converter={StaticResource BoolToVis}}" />
-		<local:MyDrawingVisual Grid.Row="1" x:Name="DrawingVisualElement" Visibility="{Binding IsSelected, ElementName=UseDrawingVisual, Converter={StaticResource BoolToVis}}" />
-		<local:MyCanvas Grid.Row="1" x:Name="DrawingCanvasElement" Visibility="{Binding IsSelected, ElementName=UseDrawingCanvas, Converter={StaticResource BoolToVis}}" />
-		<local:MyStreamGeometry Grid.Row="1" x:Name="StreamGeometryElement" Visibility="{Binding IsSelected, ElementName=UseStreamGeometry, Converter={StaticResource BoolToVis}}" />
-        <local:MyGeometryDrawing Grid.Row="1" x:Name="GeometryDrawingElement" Visibility="{Binding IsSelected, ElementName=UseGeometryDrawing, Converter={StaticResource BoolToVis}}" />
+		<shared:MyDrawingVisual Grid.Row="1" x:Name="DrawingVisualElement" Visibility="{Binding IsSelected, ElementName=UseDrawingVisual, Converter={StaticResource BoolToVis}}" />
+		<shared:MyCanvas Grid.Row="1" x:Name="DrawingCanvasElement" Visibility="{Binding IsSelected, ElementName=UseDrawingCanvas, Converter={StaticResource BoolToVis}}" />
+		<shared:MyStreamGeometry Grid.Row="1" x:Name="StreamGeometryElement" Visibility="{Binding IsSelected, ElementName=UseStreamGeometry, Converter={StaticResource BoolToVis}}" />
+        <shared:MyGeometryDrawing Grid.Row="1" x:Name="GeometryDrawingElement" Visibility="{Binding IsSelected, ElementName=UseGeometryDrawing, Converter={StaticResource BoolToVis}}" />
 		<Border Grid.Row="1" x:Name="WindowsFormsElement" Visibility="{Binding IsSelected, ElementName=UseWindowsForms, Converter={StaticResource BoolToVis}}" />
 		<local:MyMonoGame Grid.Row="1" x:Name="MonoGameElement" Visibility="{Binding IsSelected, ElementName=UseMonoGame, Converter={StaticResource BoolToVis}}" />
 		<wv2:WebView2 Grid.Row="1" x:Name="MobiusX" Visibility="{Binding IsSelected, ElementName=UseWebView, Converter={StaticResource BoolToVis}}"></wv2:WebView2>

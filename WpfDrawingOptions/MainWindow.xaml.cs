@@ -7,18 +7,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
+using DrawingOptions.Shared;
 using Microsoft.Web.WebView2.Core;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace WpfDrawingOptions;
-
-public static class TestConstants
-{
-    // When you change this, don't forget to also change the number in index.html (they aren't linked)
-    // Then save, clean, and rebuild all projects
-    public const int NumberOfLines = 5_000;
-}
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

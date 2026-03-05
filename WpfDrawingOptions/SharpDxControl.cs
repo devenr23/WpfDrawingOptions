@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using DrawingOptions.Shared;
 
 namespace WpfDrawingOptions;
 
