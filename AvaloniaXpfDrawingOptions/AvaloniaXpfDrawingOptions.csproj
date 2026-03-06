@@ -1,0 +1,17 @@
+﻿<Project Sdk="Xpf.Sdk/1.6.1">
+	<ItemGroup>
+		<RuntimeHostConfigurationOption Include="AvaloniaUI.Xpf.LicenseKey" Value="AQAAAHIAAAAfiwgAAAAAAAADY2RAAGbHYE+7ybLiMD4LAwMDa05mXmkFa25icn4xe3lmXkp+eTF7UlF+eXFqEStIT0VBGk9FQZpuYkGmbnFGZi6YU56Zl5ZflFvMW1qcmJ5qVVSaV5KZm8oJ4RWnZAMAHgKwknYAAAAAAQAAGCVbV/lUtSpchi7zZoakWK4jNVp7v3WTgFxFO86z7A2UgOh/vqgDPDsyZwo5C20LEFEBD5smWShmYpCOJxSUu1MFdVtgWY41c3tDcZ1pheZG9Nu6YJ8d8H/DRzYG1TXDFfH+P0LtU0ZKC0gDERf590W0rgwcXok78sW1qbF+spAq77u0NpSDEJvLbW8HPSztHqNTb+B6dRArsOgRADVT095508vkbtpWiC/D4wKBx8NAUHUNft/gU5xSjOdlxNwvXrKswWLdtLqrfd0uTYx8j66rTpP0m2lMyVlLyxcfxTBMEFMizn+52uwP4NWsIvQIQbvVe+NpWHDtu0P+WQ3/5A==" />
+	</ItemGroup>
+	
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\DrawingOptions.Shared\DrawingOptions.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

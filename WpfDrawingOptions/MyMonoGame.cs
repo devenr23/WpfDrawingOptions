@@ -1,4 +1,5 @@
 ﻿using System;
+using DrawingOptions.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Framework.WpfInterop;
@@ -51,7 +52,7 @@ public class MyMonoGame : WpfGame
         var batch = new SpriteBatch(GraphicsDevice);
         batch.Begin();
 
-        for (int i = 0; i < 5000; i++)
+        for (int i = 0; i < TestConstants.NumberOfLines; i++)
         {
             var color = new Color
             {

@@ -9,15 +9,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="html\index.html" />
+		<None Remove="index.html" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
-		<Content Include="html\index.html">
+		<Content Include="..\DrawingOptions.Shared\html\index.html">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3800.47" />
 		<PackageReference Include="MonoGame.Framework.WpfInterop" Version="1.9.2" />
@@ -25,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\DrawingOptions.Shared\DrawingOptions.Shared.csproj" />
 		<ProjectReference Include="..\SKGLWpfControl\SKGLWpfControl.csproj" />
 	</ItemGroup>
 

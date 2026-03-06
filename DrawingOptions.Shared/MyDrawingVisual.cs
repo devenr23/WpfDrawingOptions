@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace WpfDrawingOptions;
+namespace DrawingOptions.Shared;
 public class MyDrawingVisual : FrameworkElement
 {
     private readonly VisualCollection _children;
