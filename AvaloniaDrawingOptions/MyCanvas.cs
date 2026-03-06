@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Common.Shared;
 using System;
 
 namespace AvaloniaDrawingOptions;

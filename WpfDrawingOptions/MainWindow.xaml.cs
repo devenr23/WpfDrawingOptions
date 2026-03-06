@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
-using DrawingOptions.Shared;
+using Common.Shared;
 using Microsoft.Web.WebView2.Core;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -53,6 +53,7 @@ public partial class MainWindow : Window
 
     private void CompositionTarget_Rendering(object? sender, EventArgs e)
     {
+        FrameRateMonitor.Instance.FrameRendered();
         if (UseSkElement.IsSelected)
         {
             SkiaElement.InvalidateVisual();

@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Shared;
 using DrawingOptions.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

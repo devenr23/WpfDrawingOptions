@@ -1,4 +1,5 @@
-﻿using DrawingOptions.Shared;
+﻿using Common.Shared;
+using DrawingOptions.Shared;
 using System;
 using System.Drawing;
 using System.Windows.Forms;

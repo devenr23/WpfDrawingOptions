@@ -1,9 +1,8 @@
-using Avalonia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AvaloniaDrawingOptions;
+namespace Common.Shared;
 
 public record BenchmarkResult(string Name, double AvgFrameRate, double AvgDrawRate);
 
@@ -16,9 +15,7 @@ public class BenchmarkManager
     public static readonly TimeSpan WarmupDuration = TimeSpan.FromSeconds(1);
     public static readonly TimeSpan CollectDuration = TimeSpan.FromSeconds(5);
 
-    private static readonly string[] OptionNames =
-        new[] { "Drawing Visual", "Drawing Canvas", "Stream Geometry", "Skia (Bitmap)", "Direct Skia", "Skia (WriteableBitmap)", "Composition" };
-
+    private readonly string[] _optionNames;
     private int _currentOption;
     private TimeSpan _phaseStart;
     private bool _inWarmup;
@@ -26,10 +23,15 @@ public class BenchmarkManager
     private readonly List<double> _drawRateSamples = [];
     private readonly List<BenchmarkResult> _results = [];
 
+    public BenchmarkManager(string[] optionNames)
+    {
+        _optionNames = optionNames;
+    }
+
     public bool IsRunning { get; private set; }
     public string StatusText { get; private set; } = "";
     public string ResultsText { get; private set; } = "";
-    public Size DrawingAreaSize { get; set; }
+    public (double Width, double Height) DrawingAreaSize { get; set; }
 
     /// <summary>1-based ComboBox index for the option currently being benchmarked.</summary>
     public int CurrentComboIndex => _currentOption + 1;
@@ -77,7 +79,7 @@ public class BenchmarkManager
             RecordResult();
             _currentOption++;
 
-            if (_currentOption >= OptionNames.Length)
+            if (_currentOption >= _optionNames.Length)
             {
                 IsRunning = false;
                 StatusText = "";
@@ -99,13 +101,13 @@ public class BenchmarkManager
     {
         var avgFrame = _frameRateSamples.Count > 0 ? _frameRateSamples.Average() : 0;
         var avgDraw  = _drawRateSamples.Count  > 0 ? _drawRateSamples.Average()  : 0;
-        _results.Add(new BenchmarkResult(OptionNames[_currentOption], avgFrame, avgDraw));
+        _results.Add(new BenchmarkResult(_optionNames[_currentOption], avgFrame, avgDraw));
     }
 
     private void UpdateStatus()
     {
         var phase = _inWarmup ? "warming up" : "measuring";
-        StatusText = $"Benchmarking: {OptionNames[_currentOption]} ({phase}\u2026)";
+        StatusText = $"Benchmarking: {_optionNames[_currentOption]} ({phase}\u2026)";
     }
 
     private void BuildResultsText()

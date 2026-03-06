@@ -17,7 +17,6 @@
             <TextBlock Margin="0,0,5,0" VerticalAlignment="Center">Drawing Type:</TextBlock>
             <ComboBox x:Name="DrawingCombo">
                 <ComboBoxItem IsSelected="True">None</ComboBoxItem>
-                <ComboBoxItem x:Name="UseDrawingVisual">Drawing Visual</ComboBoxItem>
                 <ComboBoxItem x:Name="UseDrawingCanvas">Drawing Canvas</ComboBoxItem>
                 <ComboBoxItem x:Name="UseStreamGeometry">Stream Geometry</ComboBoxItem>
                 <ComboBoxItem x:Name="UseSkiaBitmap">Skia (Bitmap)</ComboBoxItem>
@@ -37,7 +36,6 @@
                        FontStyle="Italic" />
         </StackPanel>
 
-        <local:MyDrawingVisual Grid.Row="1" x:Name="DrawingVisualElement" IsVisible="{Binding IsSelected, ElementName=UseDrawingVisual}" />
         <local:MyCanvas Grid.Row="1" x:Name="DrawingCanvasElement" IsVisible="{Binding IsSelected, ElementName=UseDrawingCanvas}" />
         <local:MyStreamGeometry Grid.Row="1" x:Name="StreamGeometryElement" IsVisible="{Binding IsSelected, ElementName=UseStreamGeometry}" />
         <local:MySkiaCanvas Grid.Row="1" x:Name="SkiaElement" IsVisible="{Binding IsSelected, ElementName=UseSkiaBitmap}" />

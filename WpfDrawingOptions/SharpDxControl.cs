@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using DrawingOptions.Shared;
+using Common.Shared;
 
 namespace WpfDrawingOptions;
 

@@ -15,4 +15,8 @@
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Common.Shared\Common.Shared.csproj" />
+	</ItemGroup>
+
 </Project>

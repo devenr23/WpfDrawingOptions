@@ -1,9 +1,8 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Windows.Media;
 
-namespace DrawingOptions.Shared;
+namespace Common.Shared;
 
 public class FrameRateMonitor : INotifyPropertyChanged
 {
@@ -25,18 +24,14 @@ public class FrameRateMonitor : INotifyPropertyChanged
 
     public void Start()
     {
-        _renderMonitorStopwatch.Start();
+        _renderMonitorStopwatch.Restart();
         _renderCount = 0;
 
-        _drawMonitorStopwatch.Start();
+        _drawMonitorStopwatch.Restart();
         _drawCount = 0;
-
-        // CompositionTarget.Rendering is reimplemented by Avalonia XPF and fires
-        // on every frame that Avalonia's compositor produces.
-        CompositionTarget.Rendering += CompositionTargetOnRendering;
     }
 
-    private void CompositionTargetOnRendering(object sender, object e)
+    public void FrameRendered()
     {
         lock (_renderMonitorStopwatch)
         {
@@ -52,6 +47,8 @@ public class FrameRateMonitor : INotifyPropertyChanged
                 _renderMonitorStopwatch.Restart();
             }
         }
+
+        FirePropertyChanged(nameof(RateInfo));
     }
 
     public void DrawCalled()
@@ -70,8 +67,6 @@ public class FrameRateMonitor : INotifyPropertyChanged
                 _drawMonitorStopwatch.Restart();
             }
         }
-
-        FirePropertyChanged(nameof(RateInfo));
     }
 
     public double FrameRate { get; private set; }
@@ -84,12 +79,5 @@ public class FrameRateMonitor : INotifyPropertyChanged
     public void FirePropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    public void Stop()
-    {
-        CompositionTarget.Rendering -= CompositionTargetOnRendering;
-        _renderMonitorStopwatch.Stop();
-        _drawMonitorStopwatch.Stop();
     }
 }

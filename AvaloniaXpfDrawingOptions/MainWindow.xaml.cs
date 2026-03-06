@@ -1,3 +1,4 @@
+using Common.Shared;
 using DrawingOptions.Shared;
 using System;
 using System.Windows;

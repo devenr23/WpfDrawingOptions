@@ -1,4 +1,4 @@
-﻿namespace DrawingOptions.Shared;
+﻿namespace Common.Shared;
 
 public static class TestConstants
 {

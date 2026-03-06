@@ -1,12 +1,14 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Common.Shared;
 using System;
 
 namespace AvaloniaDrawingOptions;
 
 public partial class MainWindow : Window
 {
-    private readonly BenchmarkManager _benchmark = new();
+    private readonly BenchmarkManager _benchmark = new(
+        ["Drawing Canvas", "Stream Geometry", "Skia (Bitmap)", "Direct Skia", "Skia (WriteableBitmap)", "Composition"]);
     private bool _benchmarkPending;
 
     public MainWindow()
@@ -55,39 +57,36 @@ public partial class MainWindow : Window
             // Set visibility directly — the IsSelected→IsVisible binding resolves
             // asynchronously, so it may not have updated by the time InvalidateVisual()
             // is called below. Setting it explicitly here guarantees Render() fires.
-            DrawingVisualElement.IsVisible       = idx == 1;
-            DrawingCanvasElement.IsVisible       = idx == 2;
-            StreamGeometryElement.IsVisible      = idx == 3;
-            SkiaElement.IsVisible                = idx == 4;
-            DirectSkiaElement.IsVisible          = idx == 5;
-            SkiaWriteableBitmapElement.IsVisible = idx == 6;
-            CompositionElement.IsVisible         = idx == 7;
+            DrawingCanvasElement.IsVisible       = idx == 1;
+            StreamGeometryElement.IsVisible      = idx == 2;
+            SkiaElement.IsVisible                = idx == 3;
+            DirectSkiaElement.IsVisible          = idx == 4;
+            SkiaWriteableBitmapElement.IsVisible = idx == 5;
+            CompositionElement.IsVisible         = idx == 6;
 
             // Capture the drawing area size from the active control once it's laid out.
             // All four controls share the same grid row so the size is the same for all.
             var activeBounds = idx switch
             {
-                1 => DrawingVisualElement.Bounds.Size,
-                2 => DrawingCanvasElement.Bounds.Size,
-                3 => StreamGeometryElement.Bounds.Size,
-                4 => SkiaElement.Bounds.Size,
-                5 => DirectSkiaElement.Bounds.Size,
-                6 => SkiaWriteableBitmapElement.Bounds.Size,
-                7 => CompositionElement.Bounds.Size,
+                1 => DrawingCanvasElement.Bounds.Size,
+                2 => StreamGeometryElement.Bounds.Size,
+                3 => SkiaElement.Bounds.Size,
+                4 => DirectSkiaElement.Bounds.Size,
+                5 => SkiaWriteableBitmapElement.Bounds.Size,
+                6 => CompositionElement.Bounds.Size,
                 _ => default
             };
             if (activeBounds.Width > 0)
-                _benchmark.DrawingAreaSize = activeBounds;
+                _benchmark.DrawingAreaSize = (activeBounds.Width, activeBounds.Height);
 
             switch (idx)
             {
-                case 1: DrawingVisualElement.Draw(); break;
-                case 2: DrawingCanvasElement.InvalidateVisual(); break;
-                case 3: StreamGeometryElement.InvalidateVisual(); break;
-                case 4: SkiaElement.InvalidateVisual(); break;
-                case 5: DirectSkiaElement.InvalidateVisual(); break;
-                case 6: SkiaWriteableBitmapElement.InvalidateVisual(); break;
-                case 7: CompositionElement.Draw(); break;
+                case 1: DrawingCanvasElement.InvalidateVisual(); break;
+                case 2: StreamGeometryElement.InvalidateVisual(); break;
+                case 3: SkiaElement.InvalidateVisual(); break;
+                case 4: DirectSkiaElement.InvalidateVisual(); break;
+                case 5: SkiaWriteableBitmapElement.InvalidateVisual(); break;
+                case 6: CompositionElement.Draw(); break;
             }
 
             FrameRateMonitor.Instance.FrameRendered();
@@ -110,9 +109,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            if (UseDrawingVisual.IsSelected)
-                DrawingVisualElement.Draw();
-            else if (UseDrawingCanvas.IsSelected)
+            if (UseDrawingCanvas.IsSelected)
                 DrawingCanvasElement.InvalidateVisual();
             else if (UseStreamGeometry.IsSelected)
                 StreamGeometryElement.InvalidateVisual();
