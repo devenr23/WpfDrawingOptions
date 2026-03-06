@@ -1,0 +1,69 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:AvaloniaDrawingOptions"
+        x:Class="AvaloniaDrawingOptions.MainWindow"
+        Title="Avalonia Drawing Options"
+        Width="800" Height="450">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
+            <TextBlock Margin="0,0,5,0" VerticalAlignment="Center">Drawing Type:</TextBlock>
+            <ComboBox x:Name="DrawingCombo">
+                <ComboBoxItem IsSelected="True">None</ComboBoxItem>
+                <ComboBoxItem x:Name="UseDrawingVisual">Drawing Visual</ComboBoxItem>
+                <ComboBoxItem x:Name="UseDrawingCanvas">Drawing Canvas</ComboBoxItem>
+                <ComboBoxItem x:Name="UseStreamGeometry">Stream Geometry</ComboBoxItem>
+                <ComboBoxItem x:Name="UseSkiaBitmap">Skia (Bitmap)</ComboBoxItem>
+                <ComboBoxItem x:Name="UseDirectSkia">Direct Skia</ComboBoxItem>
+                <ComboBoxItem x:Name="UseSkiaWriteableBitmap">Skia (WriteableBitmap)</ComboBoxItem>
+                <ComboBoxItem x:Name="UseComposition">Composition</ComboBoxItem>
+            </ComboBox>
+            <Button x:Name="RunBenchmarkButton"
+                    Margin="10,0,0,0"
+                    Click="OnRunBenchmarkClicked"
+                    ToolTip.Tip="Cycles through all 4 drawing modes. Each gets 1s warmup then 3s measurement.">
+                Run Benchmark
+            </Button>
+            <TextBlock x:Name="BenchmarkStatusText"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       FontStyle="Italic" />
+        </StackPanel>
+
+        <local:MyDrawingVisual Grid.Row="1" x:Name="DrawingVisualElement" IsVisible="{Binding IsSelected, ElementName=UseDrawingVisual}" />
+        <local:MyCanvas Grid.Row="1" x:Name="DrawingCanvasElement" IsVisible="{Binding IsSelected, ElementName=UseDrawingCanvas}" />
+        <local:MyStreamGeometry Grid.Row="1" x:Name="StreamGeometryElement" IsVisible="{Binding IsSelected, ElementName=UseStreamGeometry}" />
+        <local:MySkiaCanvas Grid.Row="1" x:Name="SkiaElement" IsVisible="{Binding IsSelected, ElementName=UseSkiaBitmap}" />
+        <local:MyDirectSkiaCanvas Grid.Row="1" x:Name="DirectSkiaElement" IsVisible="{Binding IsSelected, ElementName=UseDirectSkia}" />
+        <local:MySkiaWriteableBitmapCanvas Grid.Row="1" x:Name="SkiaWriteableBitmapElement" IsVisible="{Binding IsSelected, ElementName=UseSkiaWriteableBitmap}" />
+        <local:MyCompositionCanvas Grid.Row="1" x:Name="CompositionElement" IsVisible="{Binding IsSelected, ElementName=UseComposition}" />
+
+        <TextBlock
+            Grid.Row="2"
+            Text="{Binding FrameRateMonitor.RateInfo}"
+            FontSize="16"
+            Margin="5,0" />
+
+        <Border Grid.Row="3"
+                x:Name="BenchmarkResultsBorder"
+                Margin="5,2,5,5" Padding="8,6"
+                Background="#F0F0F0" CornerRadius="4"
+                IsVisible="False">
+            <StackPanel>
+                <Button HorizontalAlignment="Right"
+                        Margin="0,0,0,4"
+                        Click="OnCopyResultsClicked">Copy</Button>
+                <SelectableTextBlock x:Name="BenchmarkResultsText"
+                                     FontFamily="Consolas"
+                                     FontSize="13" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
