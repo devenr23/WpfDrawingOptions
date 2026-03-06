@@ -16,6 +16,6 @@
   <!--      <vm:MainWindowViewModel/>
     </Design.DataContext>
     -->
-    <local:SkiaImage x:Name="SkiaImageElement"  />
+    <local:DrawContext x:Name="DrawContextElement"  />
 
 </Window>

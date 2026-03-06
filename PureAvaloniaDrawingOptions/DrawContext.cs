@@ -17,7 +17,7 @@ public static class TestConstants
 }
 
 
-public class SkiaImage : Control
+public class DrawContext : Control
 {
     private readonly Color _background1 = Color.FromArgb(200, 200, 0, 0);
     private readonly Color _background2 = Color.FromArgb(200, 0, 200, 200); //GreenYellow;
@@ -28,14 +28,22 @@ public class SkiaImage : Control
     // Timer disposable returned by DispatcherTimer.Run
     private IDisposable? _renderTimer;
 
-    static SkiaImage()
+    static DrawContext()
     {
 
     }
 
-    public override void Render(DrawingContext context)
+    // Pseudocode:
+    // 1. Call base.Render(context)
+    // 2. If running in design mode, skip heavy drawing to avoid designer performance issues
+    // 3. Otherwise call DrawCanvas with current bounds and background color
+    public override void Render(Avalonia.Media.DrawingContext context)
     {
         base.Render(context);
+
+        // Skip heavy rendering when in the designer/visual editor
+        if (Design.IsDesignMode)
+            return;
 
         DrawCanvas(context, (int)Bounds.Width, (int)Bounds.Height, _background3);
         
@@ -66,8 +74,9 @@ public class SkiaImage : Control
         _renderTimer = null;
     }
 
-    private void DrawCanvas(DrawingContext context, int width, int height, Color background)
+    private void DrawCanvas(Avalonia.Media.DrawingContext context, int width, int height, Color background)
     {
+        Stopwatch stopwatch = Stopwatch.StartNew();
         var avaloniaColor = Color.FromArgb(background.A, background.R, background.G, background.B);
         context.DrawRectangle(new SolidColorBrush(avaloniaColor), null, new Rect(0, 0, width, height));
 
@@ -87,6 +96,9 @@ public class SkiaImage : Control
                     new Point(_random.Next(width), _random.Next(height))
                 );
         }
+
+        var em = stopwatch.ElapsedMilliseconds;
+        stopwatch.Restart();
 
         // FrameRateMonitor.Instance.DrawCalled();
     }
