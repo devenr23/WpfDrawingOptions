@@ -39,8 +39,10 @@
                     <ComboBoxItem x:Name="UseGeometryDrawing">GeometryDrawing</ComboBoxItem>
                     <ComboBoxItem x:Name="UseWindowsForms">Windows Forms</ComboBoxItem>
                     <ComboBoxItem x:Name="UseMonoGame">MonoGame</ComboBoxItem>
-                    <ComboBoxItem x:Name="UseWebView" Selected="UseWebView_Selected" Unselected="UseWebView_Unselected">Web View</ComboBoxItem>
                     <ComboBoxItem x:Name="UseSharpDX">Sharp DX</ComboBoxItem>
+                    <ComboBoxItem x:Name="UseWebView" Selected="UseWebView_Selected" Unselected="UseWebView_Unselected">Web View</ComboBoxItem>
+                    <ComboBoxItem x:Name="UseWebViewGL" Selected="UseWebView_Selected2" Unselected="UseWebView_Unselected2">Web View GL</ComboBoxItem>
+
                 </ComboBox.Items>
             </ComboBox>
 		</StackPanel>
@@ -54,7 +56,8 @@
 		<Border Grid.Row="1" x:Name="WindowsFormsElement" Visibility="{Binding IsSelected, ElementName=UseWindowsForms, Converter={StaticResource BoolToVis}}" />
 		<local:MyMonoGame Grid.Row="1" x:Name="MonoGameElement" Visibility="{Binding IsSelected, ElementName=UseMonoGame, Converter={StaticResource BoolToVis}}" />
 		<wv2:WebView2 Grid.Row="1" x:Name="MobiusX" Visibility="{Binding IsSelected, ElementName=UseWebView, Converter={StaticResource BoolToVis}}"></wv2:WebView2>
-		<local:SharpDxControl Grid.Row="1" x:Name="SharpDxControlElement" Visibility="{Binding IsSelected, ElementName=UseSharpDX, Converter={StaticResource BoolToVis}}" />
+        <wv2:WebView2 Grid.Row="1" x:Name="MobiusY" Visibility="{Binding IsSelected, ElementName=UseWebViewGL, Converter={StaticResource BoolToVis}}"></wv2:WebView2>
+        <local:SharpDxControl Grid.Row="1" x:Name="SharpDxControlElement" Visibility="{Binding IsSelected, ElementName=UseSharpDX, Converter={StaticResource BoolToVis}}" />
 		
 		<TextBlock 
 			Grid.Row="2" 

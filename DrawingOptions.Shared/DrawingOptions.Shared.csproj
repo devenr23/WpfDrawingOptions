@@ -8,10 +8,14 @@
 
 	<ItemGroup>
 		<None Remove="html\index.html" />
+		<None Remove="html\webgl.html" />
 	</ItemGroup>
 	
 	<ItemGroup>
 	  <Content Include="html\index.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="html\webgl.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>

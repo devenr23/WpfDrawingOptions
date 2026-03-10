@@ -53,7 +53,10 @@
                 // Draw the Path
                 ctx.stroke();
             }
-            window.chrome.webview.postMessage('Draw Called');
+            // Notify host
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage('Draw Called');
+            }
             window.requestAnimationFrame(draw);
         }
 
