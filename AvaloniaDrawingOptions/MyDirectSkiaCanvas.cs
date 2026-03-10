@@ -30,6 +30,11 @@ public class MyDirectSkiaCanvas : Control
     private sealed class DirectSkiaDrawOp : ICustomDrawOperation
     {
         private readonly Random _random;
+        private readonly SKPaint _reusablePaint = new()
+        {
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke
+        };
 
         public DirectSkiaDrawOp(Rect bounds, Random random)
         {
@@ -39,11 +44,14 @@ public class MyDirectSkiaCanvas : Control
 
         public Rect Bounds { get; }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            _reusablePaint?.Dispose();
+        }
 
         public bool HitTest(Point p) => false;
 
-        public bool Equals(ICustomDrawOperation? other) => false;
+       public bool Equals(ICustomDrawOperation? other) => false; // other is DirectSkiaDrawOp op && op.Bounds == Bounds;
 
         public void Render(ImmediateDrawingContext context)
         {
@@ -51,32 +59,24 @@ public class MyDirectSkiaCanvas : Control
             if (leaseFeature is null) return;
 
             using var lease = leaseFeature.Lease();
+            var canvas = lease.SkCanvas;
+            var w = Math.Max(1, (int)Bounds.Width);
+            var h = Math.Max(1, (int)Bounds.Height);
+
+            for (int i = 0; i < TestConstants.NumberOfLines; i++)
             {
-                var canvas = lease.SkCanvas;
-                var w = Math.Max(1, (int)Bounds.Width);
-                var h = Math.Max(1, (int)Bounds.Height);
+                // Reuse paint object, just update properties
+                _reusablePaint.Color = new SKColor(
+                    (byte)_random.Next(255),
+                    (byte)_random.Next(255),
+                    (byte)_random.Next(255),
+                    (byte)_random.Next(255));
+                _reusablePaint.StrokeWidth = _random.Next(1, 10);
 
-                for (int i = 0; i < TestConstants.NumberOfLines; i++)
-                {
-                    var color = new SKColor(
-                        (byte)_random.Next(255),
-                        (byte)_random.Next(255),
-                        (byte)_random.Next(255),
-                        (byte)_random.Next(255));
-
-                    using var paint = new SKPaint
-                    {
-                        Color = color,
-                        StrokeWidth = _random.Next(1, 10),
-                        IsAntialias = true,
-                        Style = SKPaintStyle.Stroke
-                    };
-
-                    canvas.DrawLine(
-                        _random.Next(w), _random.Next(h),
-                        _random.Next(w), _random.Next(h),
-                        paint);
-                }
+                canvas.DrawLine(
+                    _random.Next(w), _random.Next(h),
+                    _random.Next(w), _random.Next(h),
+                    _reusablePaint);
             }
         }
     }

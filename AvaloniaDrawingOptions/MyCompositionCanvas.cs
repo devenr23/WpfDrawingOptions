@@ -64,10 +64,8 @@ public class MyCompositionCanvas : Control
 
         _visual.SendHandlerMessage(new DrawMessage(w, h));
 
-        // Alternate the visual's size by 1px on each call to force a backing-surface
-        // resize, which is the only reliable way to trigger the initial OnRender call
-        // in Avalonia 11.3. Once OnRender fires, RegisterForNextAnimationFrameUpdate
-        // at its end keeps the render loop self-sustaining.
+        // Size toggle is REQUIRED to trigger OnRender in Avalonia 11.3
+        // This is a known limitation - the composition visual needs a property change
         _sizeToggle = !_sizeToggle;
         _visual.Size = new Vector(w + (_sizeToggle ? 1 : 0), h);
     }
@@ -78,6 +76,11 @@ public class MyCompositionCanvas : Control
     {
         private readonly Random _random;
         private DrawMessage? _pending;
+        private readonly SKPaint _reusablePaint = new()
+        {
+            IsAntialias = true,
+            Style = SKPaintStyle.Stroke
+        };
 
         public CompositionDrawHandler(Random random)
         {
@@ -103,34 +106,28 @@ public class MyCompositionCanvas : Control
                     using var lease = leaseFeature.Lease();
                     var canvas = lease.SkCanvas;
 
-                    //canvas.Clear(SKColors.Transparent);
+                    canvas.Clear(SKColors.Transparent);  // Clear previous frame
 
                     for (int i = 0; i < TestConstants.NumberOfLines; i++)
                     {
-                        var color = new SKColor(
+                        _reusablePaint.Color = new SKColor(
                             (byte)_random.Next(255),
                             (byte)_random.Next(255),
                             (byte)_random.Next(255),
                             (byte)_random.Next(255));
-
-                        using var paint = new SKPaint
-                        {
-                            Color = color,
-                            StrokeWidth = _random.Next(1, 10),
-                            IsAntialias = true,
-                            Style = SKPaintStyle.Stroke
-                        };
+                        _reusablePaint.StrokeWidth = _random.Next(1, 10);
 
                         canvas.DrawLine(
                             _random.Next(msg.Width), _random.Next(msg.Height),
                             _random.Next(msg.Width), _random.Next(msg.Height),
-                            paint);
+                            _reusablePaint);
                     }
 
                     FrameRateMonitor.Instance.DrawCalled();
                 }
             }
 
+            // Keep render loop alive
             RegisterForNextAnimationFrameUpdate();
         }
     }

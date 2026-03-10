@@ -135,7 +135,7 @@ public class SKGLWpfControl : GLWpfControl
         using (new SKAutoCanvasRestore(canvas, true))
         {
             // start drawing
-            OnPaintSurface(new SKPaintGLSurfaceEventArgs(surface, renderTarget, surfaceOrigin, colorType, glInfo));
+            OnPaintSurface(new SKPaintGLSurfaceEventArgs(surface, renderTarget, surfaceOrigin,colorType));
         }
 
         // update the control
