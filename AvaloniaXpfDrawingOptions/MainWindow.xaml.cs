@@ -19,6 +19,7 @@ public partial class MainWindow : Window
 
     private void CompositionTarget_Rendering(object? sender, EventArgs e)
     {
+        FrameRateMonitor.Instance.FrameRendered();
         if (UseDrawingVisual.IsSelected)
         {
             DrawingVisualElement.Draw();
