@@ -30,6 +30,22 @@ public partial class MainWindow : Window
     private readonly Random _random = new();
     private bool _cancelImageTask;
 
+    private readonly BenchmarkManager _benchmark = new(
+        [
+            "SkElement", "SKGLWpfControl", "Drawing Visual", "Drawing Canvas",
+            "Stream Geometry", "GeometryDrawing", "Windows Forms", "MonoGame", "Sharp DX",
+            "Web View", "Web View GL", "Web View GL Pixi"
+        ],
+        new()
+        {
+            ["Web View"]      = TimeSpan.FromSeconds(4),
+            ["Web View GL"]   = TimeSpan.FromSeconds(4),
+            ["Web View GL Pixi"] = TimeSpan.FromSeconds(4),
+        });
+    private bool _benchmarkPending;
+    // Maps 0-based benchmark option to DrawingCombo index (skips SkiaImage=3)
+    private static readonly int[] BenchmarkComboIndices = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
     public MainWindow()
     {
         InitializeComponent();
@@ -54,38 +70,96 @@ public partial class MainWindow : Window
     private void CompositionTarget_Rendering(object? sender, EventArgs e)
     {
         FrameRateMonitor.Instance.FrameRendered();
-        if (UseSkElement.IsSelected)
+        var time = ((RenderingEventArgs)e).RenderingTime;
+
+        if (_benchmarkPending)
         {
-            SkiaElement.InvalidateVisual();
+            _benchmarkPending = false;
+            _benchmark.Start(time);
         }
-        else if (UseSkGl.IsSelected)
+
+        if (_benchmark.IsRunning)
         {
-            SkGlElement.InvalidateVisual();
+            var comboIdx = BenchmarkComboIndices[_benchmark.CurrentComboIndex - 1];
+            DrawingCombo.SelectedIndex = comboIdx;
+
+            var (areaW, areaH) = comboIdx switch
+            {
+                1  => (SkiaElement.ActualWidth,          SkiaElement.ActualHeight),
+                2  => (SkGlElement.ActualWidth,           SkGlElement.ActualHeight),
+                4  => (DrawingVisualElement.ActualWidth,  DrawingVisualElement.ActualHeight),
+                5  => (DrawingCanvasElement.ActualWidth,  DrawingCanvasElement.ActualHeight),
+                6  => (StreamGeometryElement.ActualWidth, StreamGeometryElement.ActualHeight),
+                7  => (GeometryDrawingElement.ActualWidth,GeometryDrawingElement.ActualHeight),
+                8  => (WindowsFormsElement.ActualWidth,   WindowsFormsElement.ActualHeight),
+                9  => (MonoGameElement.ActualWidth,       MonoGameElement.ActualHeight),
+                10 => (SharpDxControlElement.ActualWidth, SharpDxControlElement.ActualHeight),
+                11 => (MobiusX.ActualWidth,               MobiusX.ActualHeight),
+                12 => (MobiusY.ActualWidth,               MobiusY.ActualHeight),
+                13 => (MobiusZ.ActualWidth,               MobiusZ.ActualHeight),
+                _  => (0.0, 0.0)
+            };
+            if (areaW > 0)
+                _benchmark.DrawingAreaSize = (areaW, areaH);
+
+            switch (comboIdx)
+            {
+                case 1: SkiaElement.InvalidateVisual(); break;
+                case 2: SkGlElement.InvalidateVisual(); break;
+                case 4: DrawingVisualElement.Draw(); break;
+                case 5: DrawingCanvasElement.InvalidateVisual(); break;
+                case 6: StreamGeometryElement.InvalidateVisual(); break;
+                case 7: GeometryDrawingElement.InvalidateVisual(); break;
+                case 8: (WindowsFormsElement.Child as WindowsFormsHost)?.Child.Invalidate(); break;
+                // case 9 (MonoGame), 11-13 (WebViews): self-rendering
+                case 10: SharpDxControlElement.InvalidateVisual(); break;
+            }
+
+            var done = _benchmark.OnFrame(time, FrameRateMonitor.Instance.FrameRate, FrameRateMonitor.Instance.DrawRate);
+            BenchmarkStatusText.Text = _benchmark.StatusText;
+
+            if (done)
+            {
+                DrawingCombo.SelectedIndex = 0;
+                DrawingCombo.IsEnabled = true;
+                RunBenchmarkButton.IsEnabled = true;
+                BenchmarkResultsText.Text = _benchmark.ResultsText;
+                BenchmarkResultsBorder.Visibility = Visibility.Visible;
+            }
         }
-        else if (UseDrawingVisual.IsSelected)
+        else
         {
-            DrawingVisualElement.Draw();
+            if (UseSkElement.IsSelected)
+                SkiaElement.InvalidateVisual();
+            else if (UseSkGl.IsSelected)
+                SkGlElement.InvalidateVisual();
+            else if (UseDrawingVisual.IsSelected)
+                DrawingVisualElement.Draw();
+            else if (UseDrawingCanvas.IsSelected)
+                DrawingCanvasElement.InvalidateVisual();
+            else if (UseStreamGeometry.IsSelected)
+                StreamGeometryElement.InvalidateVisual();
+            else if (UseGeometryDrawing.IsSelected)
+                GeometryDrawingElement.InvalidateVisual();
+            else if (UseWindowsForms.IsSelected)
+                (WindowsFormsElement.Child as WindowsFormsHost)?.Child.Invalidate();
+            else if (UseSharpDX.IsSelected)
+                SharpDxControlElement.InvalidateVisual();
         }
-        else if (UseDrawingCanvas.IsSelected)
-        {
-            DrawingCanvasElement.InvalidateVisual();
-        }
-        else if (UseStreamGeometry.IsSelected)
-        {
-            StreamGeometryElement.InvalidateVisual();
-        }
-        else if (UseGeometryDrawing.IsSelected)
-        {
-            GeometryDrawingElement.InvalidateVisual();
-        }
-        else if (UseWindowsForms.IsSelected)
-        {
-            (WindowsFormsElement.Child as WindowsFormsHost)?.Child.Invalidate();
-        }
-        else if (UseSharpDX.IsSelected)
-        {
-            SharpDxControlElement.InvalidateVisual();
-        }
+    }
+
+    private void OnRunBenchmarkClicked(object sender, RoutedEventArgs e)
+    {
+        RunBenchmarkButton.IsEnabled = false;
+        DrawingCombo.IsEnabled = false;
+        BenchmarkResultsBorder.Visibility = Visibility.Collapsed;
+        BenchmarkStatusText.Text = "Starting\u2026";
+        _benchmarkPending = true;
+    }
+
+    private void OnCopyResultsClicked(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText(_benchmark.ResultsText);
     }
 
     private void DrawCanvas(SKCanvas canvas, int width, int height, SKColor background)
@@ -171,6 +245,7 @@ public partial class MainWindow : Window
     private async void UseWebView_Selected(object sender, RoutedEventArgs e)
     {
         await MobiusX.EnsureCoreWebView2Async(null);
+        MobiusX.CoreWebView2.WebMessageReceived += ReceiveMessageFromJavaScript;
         var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         MobiusX.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, CoreWebView2HostResourceAccessKind.Allow);
         MobiusX.CoreWebView2.Navigate("https://demo/html/index.html");
@@ -179,6 +254,7 @@ public partial class MainWindow : Window
     private async void UseWebView_Selected2(object sender, RoutedEventArgs e)
     {
         await MobiusY.EnsureCoreWebView2Async(null);
+        MobiusY.CoreWebView2.WebMessageReceived += ReceiveMessageFromJavaScript;
         var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         MobiusY.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, CoreWebView2HostResourceAccessKind.Allow);
         MobiusY.CoreWebView2.Navigate("https://demo/html/webgl.html");
@@ -187,6 +263,7 @@ public partial class MainWindow : Window
     private async void UseWebView_Selected3(object sender, RoutedEventArgs e)
     {
         await MobiusZ.EnsureCoreWebView2Async(null);
+        MobiusZ.CoreWebView2.WebMessageReceived += ReceiveMessageFromJavaScript;
         var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         MobiusZ.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, CoreWebView2HostResourceAccessKind.Allow);
         MobiusZ.CoreWebView2.Navigate("https://demo/html/pixi.html");

@@ -49,19 +49,26 @@
             FontSize="16"
             Margin="5,0" />
 
-        <Border Grid.Row="3"
-                x:Name="BenchmarkResultsBorder"
-                Margin="5,2,5,5" Padding="8,6"
-                Background="#F0F0F0" CornerRadius="4"
-                IsVisible="False">
-            <StackPanel>
-                <Button HorizontalAlignment="Right"
-                        Margin="0,0,0,4"
-                        Click="OnCopyResultsClicked">Copy</Button>
-                <SelectableTextBlock x:Name="BenchmarkResultsText"
-                                     FontFamily="Consolas"
-                                     FontSize="13" />
-            </StackPanel>
-        </Border>
+        <Grid Grid.Row="3" x:Name="BenchmarkResultsBorder" IsVisible="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0"
+                    HorizontalAlignment="Right"
+                    Margin="5,2,5,2"
+                    Click="OnCopyResultsClicked">Copy</Button>
+            <Border Grid.Row="1"
+                    Margin="5,0,5,5" Padding="8,6"
+                    Background="#F0F0F0" CornerRadius="4">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <SelectableTextBlock x:Name="BenchmarkResultsText"
+                                         FontFamily="Consolas"
+                                         FontSize="13"
+                                         Foreground="#1A1A1A"
+                                         TextWrapping="NoWrap" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

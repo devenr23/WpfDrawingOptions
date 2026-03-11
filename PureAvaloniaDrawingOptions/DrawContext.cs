@@ -39,7 +39,6 @@ public class DrawContext : Control
             return;
 
         DrawCanvas(context, (int)Bounds.Width, (int)Bounds.Height, _background3);
-        Dispatcher.UIThread.Post(() => FrameRateMonitor.Instance.FrameRendered());
     }
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {

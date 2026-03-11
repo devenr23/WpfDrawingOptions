@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
@@ -27,6 +28,11 @@
                     <ComboBoxItem x:Name="UseGeometryDrawing">GeometryDrawing</ComboBoxItem>
                 </ComboBox.Items>
             </ComboBox>
+            <Button x:Name="RunBenchmarkButton" Margin="10,0,0,0" Click="OnRunBenchmarkClicked"
+                    ToolTip="Cycles through all drawing methods. Each gets 1s warmup then 5s measurement.">
+                Run Benchmark
+            </Button>
+            <TextBlock x:Name="BenchmarkStatusText" Margin="10,0,0,0" VerticalAlignment="Center" FontStyle="Italic" />
         </StackPanel>
 
         <shared:MyDrawingVisual Grid.Row="1" x:Name="DrawingVisualElement" Visibility="{Binding IsSelected, ElementName=UseDrawingVisual, Converter={StaticResource BoolToVis}}" />
@@ -39,5 +45,23 @@
             Text="{Binding FrameRateMonitor.RateInfo}"
             FontSize="16"
             Foreground="Black" />
+
+        <Grid Grid.Row="3" x:Name="BenchmarkResultsBorder" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" HorizontalAlignment="Right" Margin="5,2,5,2" Click="OnCopyResultsClicked">Copy</Button>
+            <Border Grid.Row="1"
+                    Margin="5,0,5,5" Padding="8,6"
+                    Background="#F0F0F0" CornerRadius="4">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <TextBox x:Name="BenchmarkResultsText" IsReadOnly="True"
+                             FontFamily="Consolas" FontSize="13" Foreground="#1A1A1A"
+                             BorderThickness="0" Background="Transparent"
+                             TextWrapping="NoWrap" IsTabStop="False" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

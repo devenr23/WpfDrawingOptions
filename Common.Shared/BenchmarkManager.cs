@@ -16,6 +16,7 @@ public class BenchmarkManager
     public static readonly TimeSpan CollectDuration = TimeSpan.FromSeconds(5);
 
     private readonly string[] _optionNames;
+    private readonly Dictionary<string, TimeSpan>? _warmupOverrides;
     private int _currentOption;
     private TimeSpan _phaseStart;
     private bool _inWarmup;
@@ -23,10 +24,14 @@ public class BenchmarkManager
     private readonly List<double> _drawRateSamples = [];
     private readonly List<BenchmarkResult> _results = [];
 
-    public BenchmarkManager(string[] optionNames)
+    public BenchmarkManager(string[] optionNames, Dictionary<string, TimeSpan>? warmupOverrides = null)
     {
         _optionNames = optionNames;
+        _warmupOverrides = warmupOverrides;
     }
+
+    private TimeSpan CurrentWarmupDuration =>
+        _warmupOverrides?.TryGetValue(_optionNames[_currentOption], out var d) == true ? d : WarmupDuration;
 
     public bool IsRunning { get; private set; }
     public string StatusText { get; private set; } = "";
@@ -60,7 +65,7 @@ public class BenchmarkManager
 
         if (_inWarmup)
         {
-            if (elapsed >= WarmupDuration)
+            if (elapsed >= CurrentWarmupDuration)
             {
                 _inWarmup = false;
                 _phaseStart = currentTime;

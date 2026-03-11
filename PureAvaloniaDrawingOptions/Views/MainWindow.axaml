@@ -10,25 +10,55 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="AvaloniaDrawingOptions">
 
- <!--   <Design.DataContext> -->
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-  <!--      <vm:MainWindowViewModel/>
-    </Design.DataContext>
-    -->
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <local:DrawContext Grid.Row="0" x:Name="DrawContextElement" />
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
+            <Button Command="{Binding RunBenchmarkCommand}"
+                    IsEnabled="{Binding IsRunBenchmarkEnabled}"
+                    ToolTip.Tip="Measures Drawing Canvas performance: 1s warmup then 5s measurement.">
+                Run Benchmark
+            </Button>
+            <TextBlock x:Name="BenchmarkStatusText"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       FontStyle="Italic" />
+        </StackPanel>
+
+        <local:DrawContext Grid.Row="1" x:Name="DrawContextElement" />
 
         <TextBlock
-            Grid.Row="1"
+            Grid.Row="2"
             Text="{Binding FrameRateMonitor.RateInfo}"
             FontSize="16"
             Margin="5,0" />
+
+        <Grid Grid.Row="3" IsVisible="{Binding IsBenchmarkResultsVisible}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0"
+                    HorizontalAlignment="Right"
+                    Margin="5,2,5,2"
+                    Click="OnCopyResultsClicked">Copy</Button>
+            <Border Grid.Row="1"
+                    Margin="5,0,5,5" Padding="8,6"
+                    Background="#F0F0F0" CornerRadius="4">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <SelectableTextBlock x:Name="BenchmarkResultsText"
+                                         FontFamily="Consolas"
+                                         FontSize="13"
+                                         Foreground="#1A1A1A"
+                                         TextWrapping="NoWrap" />
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
 
 </Window>

@@ -8,10 +8,23 @@
 		<TargetFramework>net10.0-windows7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DrawingOptions.Shared\DrawingOptions.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.IO.Packaging" Version="10.0.4" ExcludeAssets="none" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Avalonia.Desktop" Version="11.3.12" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Repackaged.6.0.System.Drawing.Common" Version="6.0.0" />
 	</ItemGroup>
 
 </Project>

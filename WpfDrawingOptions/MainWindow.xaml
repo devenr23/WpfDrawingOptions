@@ -23,8 +23,9 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		
+
 		<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
 			<Label Margin="0 0 5 0">Drawing Type:</Label>
 			<ComboBox x:Name="DrawingCombo">
@@ -46,6 +47,11 @@
 
                 </ComboBox.Items>
             </ComboBox>
+            <Button x:Name="RunBenchmarkButton" Margin="10,0,0,0" Click="OnRunBenchmarkClicked"
+                    ToolTip="Cycles through non-threaded drawing methods. Each gets 1s warmup then 5s measurement.">
+                Run Benchmark
+            </Button>
+            <TextBlock x:Name="BenchmarkStatusText" Margin="10,0,0,0" VerticalAlignment="Center" FontStyle="Italic" />
 		</StackPanel>
 		<skia:SKElement x:Name="SkiaElement" Grid.Row="1" PaintSurface="SkiaElement_PaintSurface" Visibility="{Binding IsSelected, ElementName=UseSkElement, Converter={StaticResource BoolToVis}}" />
 		<skglwpf:SKGLWpfControl x:Name="SkGlElement" Grid.Row="1" PaintSurface="SkGlElement_PaintSurface" RenderContinuously="False" Visibility="{Binding IsSelected, ElementName=UseSkGl, Converter={StaticResource BoolToVis}}" />
@@ -61,10 +67,28 @@
         <wv2:WebView2 Grid.Row="1" x:Name="MobiusZ" Visibility="{Binding IsSelected, ElementName=UseWebViewGLPixijs, Converter={StaticResource BoolToVis}}"></wv2:WebView2>
         <local:SharpDxControl Grid.Row="1" x:Name="SharpDxControlElement" Visibility="{Binding IsSelected, ElementName=UseSharpDX, Converter={StaticResource BoolToVis}}" />
 		
-		<TextBlock 
-			Grid.Row="2" 
+		<TextBlock
+			Grid.Row="2"
 			Text="{Binding FrameRateMonitor.RateInfo}"
 			FontSize="16"
 			Foreground="Black"/>
+
+		<Grid Grid.Row="3" x:Name="BenchmarkResultsBorder" Visibility="Collapsed">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Button Grid.Row="0" HorizontalAlignment="Right" Margin="5,2,5,2" Click="OnCopyResultsClicked">Copy</Button>
+			<Border Grid.Row="1"
+					Margin="5,0,5,5" Padding="8,6"
+					Background="#F0F0F0" CornerRadius="4">
+				<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+					<TextBox x:Name="BenchmarkResultsText" IsReadOnly="True"
+							 FontFamily="Consolas" FontSize="13" Foreground="#1A1A1A"
+							 BorderThickness="0" Background="Transparent"
+							 TextWrapping="NoWrap" IsTabStop="False" />
+				</ScrollViewer>
+			</Border>
+		</Grid>
 	</Grid>
 </Window>

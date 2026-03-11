@@ -24,7 +24,6 @@ public class MyDirectSkiaCanvas : Control
             return;
 
         context.Custom(new DirectSkiaDrawOp(new Rect(Bounds.Size), _random));
-        FrameRateMonitor.Instance.DrawCalled();
     }
 
     private sealed class DirectSkiaDrawOp : ICustomDrawOperation
@@ -78,6 +77,8 @@ public class MyDirectSkiaCanvas : Control
                     _random.Next(w), _random.Next(h),
                     _reusablePaint);
             }
+
+            FrameRateMonitor.Instance.DrawCalled();
         }
     }
 }
