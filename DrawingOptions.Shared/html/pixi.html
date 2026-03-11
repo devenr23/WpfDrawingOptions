@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>PixiJS Line Rendering</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Load PixiJS globally from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.0.0/dist/pixi.min.js"></script>
+    
+    <!-- Your drawing code -->
+    <script>
+        (async () => {
+            const app = new PIXI.Application();
+            await app.init({
+                preference: 'webgl',  // FORCE WebGL instead of WebGPU
+                backgroundColor: 0x000000,
+                resizeTo: window,
+                antialias: false,  // Disable for better performance
+            });
+
+            document.body.appendChild(app.canvas);
+
+            const g = new PIXI.Graphics();
+            app.stage.addChild(g);
+
+            const NUM_LINES = 5000;
+            const w = app.screen.width;
+            const h = app.screen.height;     
+            app.ticker.add(() => {
+
+
+                g.clear();
+
+                for (let i = 0; i < NUM_LINES; i++) {
+                    const x1 = Math.random() * w;
+                    const y1 = Math.random() * h;
+                    const x2 = Math.random() * w;
+                    const y2 = Math.random() * h;
+
+                    const r = Math.floor(Math.random() * 255);
+                    const gCol = Math.floor(Math.random() * 255);
+                    const b = Math.floor(Math.random() * 255);
+                    const a = Math.random();
+                    const width = Math.random() * 8 + 1;
+
+                    g.moveTo(x1, y1);
+                    g.lineTo(x2, y2);
+                    g.stroke({
+                        width,
+                        color: (r << 16) + (gCol << 8) + b,
+                        alpha: a,
+                    });
+                }
+
+                // Notify WPF host
+                if (window.chrome && window.chrome.webview) {
+                    window.chrome.webview.postMessage('Draw Called');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

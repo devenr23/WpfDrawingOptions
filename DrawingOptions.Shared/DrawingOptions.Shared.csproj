@@ -7,12 +7,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="html\drawsample.js" />
 		<None Remove="html\index.html" />
+		<None Remove="html\pixi.html" />
+		<None Remove="html\pixi.min.js" />
 		<None Remove="html\webgl.html" />
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Content Include="html\drawsample.js">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Include="html\index.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="html\pixi.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="html\pixi.min.js">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="html\webgl.html">

@@ -184,6 +184,14 @@ public partial class MainWindow : Window
         MobiusY.CoreWebView2.Navigate("https://demo/html/webgl.html");
     }
 
+    private async void UseWebView_Selected3(object sender, RoutedEventArgs e)
+    {
+        await MobiusZ.EnsureCoreWebView2Async(null);
+        var localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        MobiusZ.CoreWebView2.SetVirtualHostNameToFolderMapping("demo", localPath, CoreWebView2HostResourceAccessKind.Allow);
+        MobiusZ.CoreWebView2.Navigate("https://demo/html/pixi.html");
+    }
+
     private void ReceiveMessageFromJavaScript(object? sender, CoreWebView2WebMessageReceivedEventArgs args)
     {
         var message = args.WebMessageAsJson;
@@ -198,5 +206,9 @@ public partial class MainWindow : Window
     private void UseWebView_Unselected2(object sender, RoutedEventArgs e)
     {
         MobiusY.CoreWebView2.WebMessageReceived -= ReceiveMessageFromJavaScript;
+    }
+    private void UseWebView_Unselected3(object sender, RoutedEventArgs e)
+    {
+        MobiusZ.CoreWebView2.WebMessageReceived -= ReceiveMessageFromJavaScript;
     }
 }
