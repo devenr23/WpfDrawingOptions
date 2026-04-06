@@ -46,6 +46,7 @@
         <TextBlock
             Grid.Row="2"
             Text="{Binding FrameRateMonitor.RateInfo}"
+            x:DataType="local:MainWindow"
             FontSize="16"
             Margin="5,0" />
 

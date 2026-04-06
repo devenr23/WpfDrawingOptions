@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using AvaloniaDrawingOptions.ViewModels;
 using Common.Shared;
@@ -60,5 +61,6 @@ public partial class MainWindow : Window
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
         if (clipboard is not null)
             await clipboard.SetTextAsync(Vm.Benchmark.ResultsText);
+
     }
 }
