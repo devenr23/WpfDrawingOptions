@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:shared="clr-namespace:DrawingOptions.Shared;assembly=DrawingOptions.Shared"
         Title="Avalonia XPF Drawing Options"
-        Height="450" Width="800">
+        Width="800" Height="450">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
